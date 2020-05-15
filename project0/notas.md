@@ -168,3 +168,144 @@ Si queremos que `this` solo se refiera al objeto en donde se escribio el metodo 
 ## Browsers y el DOM
 
 **Document Object Model**
+
+# React Native
+
+¿Como funciona?
+
+- JavaScript is bundled:
+  - Javascript se transpila todo de ES7, ES6 dowt to ES5 y se minifica.
+- Hilos separados para UI, layout y Javascript. No se cuelga todo si se cuelga alguna d elas partes.
+- Y estos elemento se comunican entre si asyncronamente a traves de un "**bridge**".
+  - El hil de JS va a requerir que se muestren los elementos de la UI.
+  - El hilo de JS puede colgarse y la UI va a seguir funcionando igual.
+
+## Principales diferencias con WEB:
+
+- Base Componentes
+- Style
+- No browser APIs
+  - CSS animations, Canvas, SVG, etc.
+  - Algunos fueron Polyfilled (fetch, timers, console, etc.)
+- Navigation
+- Los componentes ya no estan disponibles globalmente como en React sino que tenemos que importarlos de 'react-native'.
+- div -> View
+- span -> Text
+- button -> button
+- checkbox -> Switch
+- ScrollView
+
+## Style
+
+- React usa objetos JS para el estilo
+- Los Objects keys estan basados en propiedades CSS
+- El layout se maneja con Flexbox (con default en columnas en vez de row como en el browser)
+- Longitudes estan en numeros isn unidades
+- la `tyle prop` ppuede tener un array de styles.
+- Expo Constants
+
+  Expo nos provee de esta gran herramienta o modulo el cual nos permite acceder a un monton informacion del dispositivo.
+  _Ejemplo_:
+  Si quisieramos acceder a la propiedad altura del status bar de nuestro dispositivo para poder configurar el paddingTop de la pantalla de nuestra app. ¿Como lo hariamos?
+
+  ```javascript
+  Constants.statusBarHeight;
+  ```
+
+- StyleSheet.create(). Nos permite crear una constante con todo el estilo de la pantalla fuera del codigo de la pantalla.
+
+  ```javascript
+  const styles = StyleSheet.create({
+    container: {
+      paddingTop: 10,
+    },
+  });
+  ```
+
+  Nos permite tener estilos en clases reutilizables.
+
+## Event Handling
+
+- No todos los componentes tienen interaccion como en Web.
+- Solo los touchables:
+  - Button
+  - Todos los Touchables que estan en la documentacion
+- En web, el handler se recibe como un argumento, pero en React Native los handlers a menudo reciben diferentes argumentos.
+
+## Components
+
+- Devuelven un nodo (algo que puede ser rendirzado)
+- Representan un apieza discreta de UI
+  . 'Todos los componentes de react deben actuar como funciones puras con respecto a sus props."
+- **Dos tipos:**
+  1. Statelees Functional Componentes _SFC_(Componentes funcionales). Solo son funciones, toman props y devuelven un nodo. No tienen tal concepto como un State.
+  2. React.Component.
+
+### Stateless Funcional Component (SFC)
+
+Es el componente mas simple. Toma props como argumentos y devuelven un nodo. Se usa cuando no se necesita un estado.
+No deberia hacer otra cosa mas que tomar props y devolver un nodo. Es lo que se llama una **funcion pura**.
+No tendria que tener **sideffects**, como ssetear un valor, o agregar el valor a un array, o actualizar un objeto o cosas por el estilo. **TOMA PROPS Y RETORNA UN VALOR**. Sino podriamos estar creando bugs o crashear la app.
+
+Cualquier cambio en las props, hara que la funcion sea re-invocada (es decir, se actualiza el componente usando el virtualDOM como ya vimos antes).
+
+### React.Component
+
+Clase abstracta que se puede extender para que se comporte como queramos.
+**¿Que es un React.Component?**
+Tienen algunas features que un componente funcional no tiene.
+
+- Instancias.
+- Mantienen su propio estado.
+- Tienen lifecycle methods (similares a hooks o event handlers) que son automaticamente invocados.
+- La funcion `render()` toma tanto props como class props.
+
+### Component Lifecycle.
+
+1. Mount
+2. Update (cada vez que se recibe una nueva prop o se actualiza el state se invoca este metodo).
+3. Unmount (cada vez que se esta por salir del componente, sirve para limpiar, como una escoba.)
+
+**Mount**:
+
+- constructor(props):
+  - Se inicializa el state o otra propiedad de la clase (bound methos etc)
+- render()
+- El objetivo final del componente es rendizarse
+- Retorna un nodo
+- componentDidMount()
+  - Se hace todo lo que no se necesita para la UI. (acciones asyncronas, timers, etc).
+  - Actualizar el estado sin que se re-renderice la UI.
+
+**Update**:
+
+- componentWillReceiveProps(nextProps):
+  - Actualiza cualquier campo del state que este basado en props.
+- shouldComponentUpdate(nextProps, nextState):
+  - Compara valores cambiados y retorna `true` si el componente deberia se re-renderizado.
+    - Si retorna `false` el ciclo de update termina.
+- componentDidUpdate(prevProps, prevState)
+  - Hacer cualquier cosa que no se necesita para la UI (requests, etc)
+
+**Unmount**:
+
+- componentWillUnmount
+  - limpiar
+    - eliminar requests pendientes no resueltas
+    - Eliminar event listeners
+    - limpiar timeouts/intervals para evitar memory leaks.
+
+## PropTypes
+
+Chequea los tipos de datos que son pasados como props a un componente y si hay algo mal, te lo devuelve en un warning.
+
+```javascript
+import PropTypes from "prop-types";
+```
+
+# Como leer Documentacion
+
+1. Tener un objetivo en mente. Tiene que haber algo concreto que queremos solucionar sino no tiene sentido andar leyendo documentacion a lo pavo por leer.
+2. ver lo que la libreria/framework/API ofrece.
+3. Encontrar algo que soluciona tu problema.
+4. Configurar la solucion usando dicha API.

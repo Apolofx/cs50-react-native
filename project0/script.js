@@ -9,10 +9,10 @@ const list = document.getElementById("todo-list");
 const itemCountSpan = document.getElementById("item-count");
 const uncheckedCountSpan = document.getElementById("unchecked-count");
 
-todo_array = [];
+let todo_array = [];
 
 function newTodo() {
-  let task_name = prompt(
+  const task_name = prompt(
     "Hi, add a new To-Do task!",
     `to-do number ${parseInt(itemCountSpan.innerHTML) + 1}`
   );
